@@ -2,7 +2,7 @@
 [![Linting](https://img.shields.io/github/workflow/status/biaw/imagehost/Linting?label=quality)](https://github.com/biaw/imagehost/actions/workflows/linting.yml)
 [![Analysis and Scans](https://img.shields.io/github/workflow/status/biaw/imagehost/Analysis%20and%20Scans?label=scan)](https://github.com/biaw/imagehost/actions/workflows/analysis-and-scans.yml)
 [![Testing](https://img.shields.io/github/workflow/status/biaw/imagehost/Testing?label=tests)](https://github.com/biaw/imagehost/actions/workflows/testing.yml)
-<!-- missing DeepScan -->
+[![DeepScan grade](https://deepscan.io/api/teams/16173/projects/19610/branches/511873/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=16173&pid=19610&bid=511873)
 [![express version](https://img.shields.io/github/package-json/dependency-version/biaw/imagehost/express)](https://www.npmjs.com/package/express)
 [![GitHub Issues](https://img.shields.io/github/issues-raw/biaw/imagehost.svg)](https://github.com/biaw/imagehost/issues)
 [![GitHub Pull Requests](https://img.shields.io/github/issues-pr-raw/biaw/imagehost.svg)](https://github.com/biaw/imagehost/pulls)
