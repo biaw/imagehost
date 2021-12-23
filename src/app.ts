@@ -3,6 +3,7 @@ import express, { RequestHandler } from "express";
 import { expressLogger, imageLogger } from "./utils/logger";
 import fileUpload from "express-fileupload";
 import { join } from "path";
+import rateLimit from "express-rate-limit";
 import { unlink } from "fs/promises";
 
 export default function(imageFolder: string) {
@@ -11,6 +12,11 @@ export default function(imageFolder: string) {
 
   const app = express();
   app.use(expressLogger);
+
+  app.use(rateLimit({
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW || "60000"),
+    max: parseInt(process.env.RATE_LIMIT_MAX || "30"),
+  }));
 
   app.get("/upload.sxcu", (req, res) => res.send({
     DestinationType: ["ImageUploader", "TextUploader", "FileUploader"].join(", "),
