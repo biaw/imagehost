@@ -9,6 +9,7 @@ const TOKEN = "test";
 Object.assign(process.env, {
   TOKEN,
   HOMEPAGE_FILE: "homepage.txt",
+  NOT_FOUND_FILE: "404.txt",
 }, process.env);
 
 const app = test(initApp(images));

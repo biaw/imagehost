@@ -32,11 +32,17 @@ export default function(imageFolder: string) {
 
   app.get("/*", (req, res) => {
     const path = req.path.slice(1) || process.env.HOMEPAGE_FILE;
-    if (!path) return res.sendStatus(404);
-    if (path.includes("..")) return res.sendStatus(403);
+    if (path) {
+      if (path.includes("..")) return res.sendStatus(403);
 
-    const fullPath = join(imageFolder, path);
-    if (testFile(fullPath)) return res.sendFile(fullPath);
+      const fullPath = join(imageFolder, path);
+      if (testFile(fullPath)) return res.sendFile(fullPath);
+    }
+
+    if (process.env.NOT_FOUND_FILE) {
+      const notFoundPath = join(imageFolder, process.env.NOT_FOUND_FILE);
+      if (testFile(notFoundPath)) return res.status(404).sendFile(notFoundPath);
+    }
 
     res.sendStatus(404);
   });
