@@ -33,7 +33,13 @@ export default function(imageFolder: string) {
   app.get("/*", (req, res) => {
     const path = req.path.slice(1) || process.env.HOMEPAGE_FILE;
     if (path) {
-      if (path.includes("..")) return res.sendStatus(403);
+      if (path.includes("..")) {
+        if (process.env.FORBIDDEN_FILE) {
+          const forbiddenPath = join(imageFolder, process.env.FORBIDDEN_FILE);
+          if (testFile(forbiddenPath)) return res.status(403).sendFile(forbiddenPath);
+        }
+        return res.sendStatus(403);
+      }
 
       const fullPath = join(imageFolder, path);
       if (testFile(fullPath)) return res.sendFile(fullPath);

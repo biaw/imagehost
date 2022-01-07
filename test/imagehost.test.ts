@@ -10,6 +10,7 @@ Object.assign(process.env, {
   TOKEN,
   HOMEPAGE_FILE: "homepage.txt",
   NOT_FOUND_FILE: "404.txt",
+  FORBIDDEN_FILE: "403.txt",
 }, process.env);
 
 const app = test(initApp(images));
