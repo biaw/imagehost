@@ -23,7 +23,8 @@ Having a log volume is optional, it's mostly for development and debugging. A "c
 
 ```cmd
 docker run --name imagehost \
-  -p 80:80 \
+  -p 1234:80 \
+  -e "TOKEN=yoursecrettoken" \
   -v /imagehost/images:/app/images \
   -v /imagehost/logs:/app/logs \
   promisesolutions/imagehost:latest
@@ -33,7 +34,8 @@ docker run --name imagehost \
 
 ```cmd
 docker run --name imagehost ^
-  -p 80:80 ^
+  -p 1234:80 ^
+  -e "TOKEN=yoursecrettoken" ^
   -v "C:\imagehost\images":/app/images ^
   -v "C:\imagehost\logs":/app/logs ^
   promisesolutions/imagehost:latest
