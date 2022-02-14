@@ -15,7 +15,7 @@
     "express-fileupload": "^1.2.1",
     "express-rate-limit": "^6.2.1",
     "express-winston": "^4.2.0",
-    "winston": "^3.5.1",
+    "winston": "^3.6.0",
     "winston-daily-rotate-file": "^4.6.0"
   },
   "devDependencies": {
