@@ -30,7 +30,7 @@ docker run --name imagehost \
   -e "TOKEN=yoursecrettoken" \
   -v /imagehost/images:/app/images \
   -v /imagehost/logs:/app/logs \
-  promisesolutions/imagehost:latest
+  ghcr.io/biaw/imagehost:latest
 ```
 
 #### Windows
@@ -41,5 +41,5 @@ docker run --name imagehost ^
   -e "TOKEN=yoursecrettoken" ^
   -v "C:\imagehost\images":/app/images ^
   -v "C:\imagehost\logs":/app/logs ^
-  promisesolutions/imagehost:latest
+  ghcr.io/biaw/imagehost:latest
 ```
