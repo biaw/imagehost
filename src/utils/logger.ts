@@ -3,9 +3,9 @@ import DailyRotateFile from "winston-daily-rotate-file";
 import expressWinston from "express-winston";
 
 const dailyRotateFileOptions = {
-  maxSize: process.env.LOG_MAX_SIZE || "25m",
-  maxFiles: process.env.LOG_MAX_FILES || "14d",
-  zippedArchive: (process.env.LOG_ZIP || "true") === "true",
+  maxSize: process.env.LOG_MAX_SIZE ?? "25m",
+  maxFiles: process.env.LOG_MAX_FILES ?? "14d",
+  zippedArchive: (process.env.LOG_ZIP ?? "true") === "true",
   extension: ".log",
 };
 
@@ -24,7 +24,7 @@ export const imageLogger = createLogger({
   format: format.combine(
     format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
     format.align(),
-    format.printf(({ level, timestamp, message }) => `${timestamp} ${level}: ${message}`),
+    format.printf(({ level, timestamp, message }) => `${timestamp as string} ${level}: ${message}`),
   ),
   transports: [
     new DailyRotateFile({

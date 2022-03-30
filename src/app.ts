@@ -1,12 +1,21 @@
 import { existsSync, statSync } from "fs";
-import express, { RequestHandler } from "express";
 import { expressLogger, imageLogger } from "./utils/logger";
+import type { RequestHandler } from "express";
+import express from "express";
 import fileUpload from "express-fileupload";
 import { join } from "path";
 import rateLimit from "express-rate-limit";
 import { unlink } from "fs/promises";
 
-export default function(imageFolder: string) {
+// request handler to require token in authorization header
+const requireToken: RequestHandler = (req, res, next) => {
+  const token = req.headers.authorization;
+  if (!token || token !== process.env.TOKEN) return res.sendStatus(401);
+  next();
+};
+
+// eslint-disable-next-line max-lines-per-function
+export default function (imageFolder: string): express.Express {
   if (!existsSync(imageFolder)) throw new Error("No image folder found");
   if (!process.env.TOKEN) throw new Error("No token specified in environment variables");
 
@@ -14,10 +23,11 @@ export default function(imageFolder: string) {
   app.use(expressLogger);
 
   app.use(rateLimit({
-    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW || "60000"),
-    max: parseInt(process.env.RATE_LIMIT_MAX || "30"),
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW ?? "60000"),
+    max: parseInt(process.env.RATE_LIMIT_MAX ?? "30"),
   }));
 
+  /* eslint-disable @typescript-eslint/naming-convention */
   app.get("/upload.sxcu", (req, res) => res.send({
     DestinationType: ["ImageUploader", "TextUploader", "FileUploader"].join(", "),
     RequestMethod: "POST",
@@ -29,6 +39,7 @@ export default function(imageFolder: string) {
     FileFormName: "file",
     URL: `http://${req.hostname}/$json:file$`,
   }));
+  /* eslint-enable @typescript-eslint/naming-convention */
 
   app.get("/*", (req, res) => {
     const path = req.path.slice(1) || process.env.HOMEPAGE_FILE;
@@ -57,7 +68,7 @@ export default function(imageFolder: string) {
     if (!req.files?.file || Array.isArray(req.files.file)) return res.sendStatus(400);
     const { file } = req.files;
 
-    const extension = file.name.split(".").pop() || "";
+    const extension = file.name.split(".").pop() ?? "";
     const path = req.path.slice(1) || generateId(imageFolder) + (extension ? `.${extension}` : "");
     file.mv(join(imageFolder, path), err => {
       if (err) {
@@ -80,28 +91,23 @@ export default function(imageFolder: string) {
     unlink(fullPath).then(() => {
       imageLogger.info(`Image ${path} deleted`);
       res.sendStatus(200);
-    }).catch(e => {
-      imageLogger.error(`Unknown error when deleting image ${path}: ${JSON.stringify(e)}`);
-      res.sendStatus(500);
-    });
+    })
+      .catch(err => {
+        imageLogger.error(`Unknown error when deleting image ${path}: ${JSON.stringify(err)}`);
+        res.sendStatus(500);
+      });
   });
 
   return app;
 }
 
-// request handler to require token in authorization header
-const requireToken: RequestHandler = (req, res, next) => {
-  const token = req.headers["authorization"];
-  if (!token || token !== process.env.TOKEN) return res.sendStatus(401);
-  next();
-};
-
 // generate random id for images
-const length = parseInt(process.env.ID_LENGTH || "8");
+const length = parseInt(process.env.ID_LENGTH ?? "8");
 const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 function generateId(imageFolder: string): string {
-  let id = "";
-  for (let i = 0; i < length; i += 1) id += chars[Math.floor(Math.random() * chars.length)];
+  const id = Array(length).fill(true)
+    .map(() => chars[Math.floor(Math.random() * chars.length)])
+    .join("");
   if (testFile(join(imageFolder, id))) return generateId(imageFolder);
   return id;
 }
